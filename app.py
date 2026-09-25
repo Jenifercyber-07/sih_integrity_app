@@ -31,10 +31,13 @@ except ImportError:
 from PIL import Image, ImageDraw, ImageFilter
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
-UPLOAD_FOLDER = os.path.join(app.root_path, 'static', 'uploads')
+if os.environ.get("VERCEL"):
+    UPLOAD_FOLDER = "/tmp/uploads"
+else:
+    UPLOAD_FOLDER = os.path.join(app.root_path, "static", "uploads")
+
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB max limit
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 # Global Audit Ledger (In-memory blockchain-ready chain)
 AUDIT_LEDGER = []
