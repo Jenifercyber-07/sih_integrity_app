@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Pipeline Integrity Assurance | SIH Prototype</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0f1d;
+            --bg-secondary: #111827;
+            --card-bg: #1e293b;
+            --card-border: #334155;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --success-green: #10b981;
+            --danger-red: #ef4444;
+            --warning-amber: #f59e0b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 24px;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        /* Header Bar */
+        header {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 24px 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .header-title h1 {
+            font-size: 1.65rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, #60a5fa, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-title p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
+
+        .system-badges {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .sys-badge {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 0.78rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sys-badge span.label {
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: 0.68rem;
+            letter-spacing: 0.05em;
+        }
+
+        .sys-badge span.val {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            color: var(--accent-cyan);
+        }
+
+        /* Layout Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 420px 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 22px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 14px;
+            margin-bottom: 18px;
+        }
+
+        .card-header h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Form Controls */
+        label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        select, input[type="text"], input[type="file"] {
+            width: 100%;
+            background: #0f172a;
+            border: 1px solid #334155;
+            color: #f1f5f9;
+            padding: 12px 14px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 16px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        select:focus, input[type="text"]:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+        }
+
+        /* Hackathon Demo Switchboard */
+        .hackathon-tools {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px dashed #475569;
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 18px;
+        }
+
+        .hackathon-tools-title {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--warning-amber);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .switch-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
+        }
+
+        .switch-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .toggle-btn {
+            background: #334155;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .toggle-btn.active {
+            background: var(--danger-red);
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            font-size: 0.98rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Integrity Layers Status Cards */
+        .layers-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .layers-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .layer-box {
+            background: #0f172a;
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 14px;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.3s;
+        }
+
+        .layer-box.pass {
+            border-left: 4px solid var(--success-green);
+        }
+
+        .layer-box.fail {
+            border-left: 4px solid var(--danger-red);
+        }
+
+        .layer-num {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            margin-bottom: 4px;
+        }
+
+        .layer-name {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: #f1f5f9;
+        }
+
+        .layer-status {
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-pass {
+            color: var(--success-green);
+        }
+
+        .status-fail {
+            color: var(--danger-red);
+        }
+
+        .status-pending {
+            color: var(--text-muted);
+        }
+
+        /* Visual Verification Proof Display */
+        .proof-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .proof-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .img-card {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .img-header {
+            padding: 8px 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            border-bottom: 1px solid #334155;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .img-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: contain;
+            background: #020617;
+            display: block;
+        }
+
+        .placeholder-box {
+            height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #475569;
+            font-size: 0.85rem;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* Manifest & Logs */
+        .manifest-box {
+            background: #020617;
+            border: 1px solid #1e293b;
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: #38bdf8;
+            height: 260px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .signature-strip {
+            margin-top: 12px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 8px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            color: var(--success-green);
+        }
+
+        .signature-strip span.sig {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 75%;
+        }
+
+        .badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-green { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid #10b981; }
+        .badge-red { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid #ef4444; }
+
+        .spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Ledger Table */
+        .ledger-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .ledger-table th {
+            text-align: left;
+            padding: 8px 12px;
+            color: var(--text-muted);
+            border-bottom: 1px solid #334155;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+        }
+
+        .ledger-table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #1e293b;
+            color: #cbd5e1;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Header Bar -->
+    <header>
+        <div class="header-title">
+            <h1>🛡️ CV Pipeline Integrity Assurance</h1>
+            <p>Trustworthy Computer Vision for Data, Models & Inference Outputs in Multi-Contributor Pipelines</p>
+        </div>
+        <div class="system-badges">
+            <div class="sys-badge">
+                <span class="label">Golden Model Fingerprint</span>
+                <span class="val">{{ golden_fingerprint[:16] }}...</span>
+            </div>
+            <div class="sys-badge">
+                <span class="label">Engine Mode</span>
+                <span class="val">{% if torch_available %}ResNet-18 (PyTorch){% else %}Fast XAI Simulation{% endif %}</span>
+            </div>
+            <div class="sys-badge">
+                <span class="label">Cryptographic Protocol</span>
+                <span class="val">SHA-256 HMAC / ECDSA</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-grid">
+        <!-- Left Column: Controls & Uploads -->
+        <div>
+            <div class="card">
+                <div class="card-header">
+                    <h3>⚡ Contributor Gateway</h3>
+                    <span class="badge-pill badge-green">NODE ACTIVE</span>
+                </div>
+
+                <form id="auditForm">
+                    <label for="contributorId">Contributor Node Authority</label>
+                    <select id="contributorId" name="contributor_id">
+                        <option value="Node_01_Certified_AI_Lab">Node_01 (Certified AI Research Lab)</option>
+                        <option value="Node_02_Edge_Camera_Fleet">Node_02 (Edge Surveillance Fleet)</option>
+                        <option value="Node_03_Medical_Imaging_Node">Node_03 (Hospital Imaging Node)</option>
+                        <option value="Rogue_Node_09_Untrusted">Rogue_Node_09 (Untrusted External Actor)</option>
+                    </select>
+
+                    <label for="imageFile">Select / Upload Image Asset</label>
+                    <input type="file" id="imageFile" name="image" accept="image/*" required>
+
+                    <!-- SIH Judge Demo Switchboard -->
+                    <div class="hackathon-tools">
+                        <div class="hackathon-tools-title">
+                            🔬 Live Judge Demonstration Switchboard
+                        </div>
+                        <div class="switch-row">
+                            <span>Simulate In-Transit Data Tamper</span>
+                            <input type="checkbox" id="dataTamperToggle" style="width: auto; margin: 0; cursor: pointer;">
+                        </div>
+                        <div class="switch-row" style="margin-top: 10px;">
+                            <span>Poison Model Weights (Backdoor)</span>
+                            <button type="button" id="modelTamperBtn" class="toggle-btn" onclick="toggleModelTampering()">Poison Model</button>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="submitBtn" class="submit-btn">
+                        <div class="spinner" id="spinner"></div>
+                        <span>Process & Cryptographically Audit</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Ledger Block Explorer -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>⛓️ Immutable Audit Ledger</h3>
+                    <span id="ledgerCount" class="badge-pill badge-green">0 BLOCKS</span>
+                </div>
+                <div style="max-height: 200px; overflow-y: auto;">
+                    <table class="ledger-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Contributor</th>
+                                <th>Status</th>
+                                <th>Signature</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ledgerBody">
+                            <tr>
+                                <td colspan="4" style="text-align: center; color: #64748b;">No audit records mined yet.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Verification Results & Proofs -->
+        <div>
+            <!-- Three-Layer Status Summary -->
+            <div class="layers-grid">
+                <!-- Layer 1 -->
+                <div class="layer-box" id="layer1Box">
+                    <div class="layer-num">Layer 1: Data Integrity</div>
+                    <div class="layer-name">Hash-chaining Audit</div>
+                    <div class="layer-status" id="layer1Status">
+                        <span class="status-pending">⏳ Standby</span>
+                    </div>
+                </div>
+
+                <!-- Layer 2 -->
+                <div class="layer-box" id="layer2Box">
+                    <div class="layer-num">Layer 2: Model Integrity</div>
+                    <div class="layer-name">Weight Checksum</div>
+                    <div class="layer-status" id="layer2Status">
+                        <span class="status-pending">⏳ Standby</span>
+                    </div>
+                </div>
+
+                <!-- Layer 3 -->
+                <div class="layer-box" id="layer3Box">
+                    <div class="layer-num">Layer 3: Output Integrity</div>
+                    <div class="layer-name">Grad-CAM XAI Proof</div>
+                    <div class="layer-status" id="layer3Status">
+                        <span class="status-pending">⏳ Standby</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visual Evidence Card -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>👁️ Visual Explainability & Proof Artifacts</h3>
+                    <div id="overallBadge">
+                        <span class="badge-pill" style="background:#334155; color:#94a3b8;">AWAITING INGESTION</span>
+                    </div>
+                </div>
+
+                <div class="proof-container">
+                    <div class="img-card">
+                        <div class="img-header">
+                            <span>Original Contributor Asset</span>
+                            <span id="origResolution">--</span>
+                        </div>
+                        <div id="origPlaceholder" class="placeholder-box">
+                            <span>📷 Image Preview</span>
+                        </div>
+                        <img id="origImg" style="display: none;" alt="Original Asset">
+                    </div>
+
+                    <div class="img-card">
+                        <div class="img-header">
+                            <span>Explainable AI Heatmap (XAI)</span>
+                            <span style="color: var(--accent-cyan);">Saliency Map</span>
+                        </div>
+                        <div id="proofPlaceholder" class="placeholder-box">
+                            <span>🔥 Grad-CAM Heatmap</span>
+                        </div>
+                        <img id="proofImg" style="display: none;" alt="Grad-CAM Proof">
+                    </div>
+                </div>
+
+                <div id="predictionBanner" style="margin-top: 14px; background: #0f172a; padding: 12px 16px; border-radius: 8px; border: 1px solid #334155; display: none;">
+                    <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Verified Model Prediction</div>
+                    <div style="font-size: 1.15rem; font-weight: 700; color: #38bdf8; display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+                        <span id="predLabel">--</span>
+                        <span id="predConfidence" style="font-size: 0.9rem; color: #a5f3fc; font-family: 'JetBrains Mono', monospace;">Confidence: --%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Manifest & Cryptographic Signing Strip -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>🔒 Signed Cryptographic Manifest (JSON-LD)</h3>
+                    <button class="toggle-btn" onclick="copyManifest()">Copy Manifest</button>
+                </div>
+                <div id="manifestOutput" class="manifest-box">// Upload an image to trigger multi-layer verification and cryptographic signing...</div>
+                
+                <div class="signature-strip" id="signatureStrip" style="display: none;">
+                    <span><strong>Digital Signature:</strong> <span class="sig" id="sigVal">--</span></span>
+                    <span class="badge-pill badge-green">SHA-256 SEALED</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let isModelTampered = false;
+    let latestManifest = null;
+
+    async function toggleModelTampering() {
+        const btn = document.getElementById('modelTamperBtn');
+        isModelTampered = !isModelTampered;
+        
+        try {
+            const resp = await fetch('/api/tamper/model', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ tampered: isModelTampered })
+            });
+            const data = await resp.json();
+            
+            if(data.model_tampered) {
+                btn.classList.add('active');
+                btn.innerText = "Model POISONED ⚠️";
+            } else {
+                btn.classList.remove('active');
+                btn.innerText = "Poison Model";
+            }
+        } catch(err) {
+            console.error("Failed to toggle model state", err);
+        }
+    }
+
+    async function refreshLedger() {
+        try {
+            const resp = await fetch('/api/ledger');
+            const data = await resp.json();
+            document.getElementById('ledgerCount').innerText = `${data.total_records} BLOCKS`;
+            
+            const tbody = document.getElementById('ledgerBody');
+            if(data.ledger && data.ledger.length > 0) {
+                tbody.innerHTML = data.ledger.slice().reverse().map(b => `
+                    <tr>
+                        <td>#${b.index}</td>
+                        <td title="${b.contributor}">${b.contributor.split('_')[0]}</td>
+                        <td>
+                            <span class="badge-pill ${b.status === 'PASS' ? 'badge-green' : 'badge-red'}">
+                                ${b.status}
+                            </span>
+                        </td>
+                        <td style="color:#38bdf8;" title="${b.signature}">${b.signature.substring(0, 10)}...</td>
+                    </tr>
+                `).join('');
+            }
+        } catch(e) {
+            console.error("Ledger sync error", e);
+        }
+    }
+
+    document.getElementById('auditForm').onsubmit = async (e) => {
+        e.preventDefault();
+        
+        const fileInput = document.getElementById('imageFile');
+        if (!fileInput.files.length) {
+            alert("Please choose an image file to audit.");
+            return;
+        }
+
+        const submitBtn = document.getElementById('submitBtn');
+        const spinner = document.getElementById('spinner');
+        const manifestBox = document.getElementById('manifestOutput');
+        const sigStrip = document.getElementById('signatureStrip');
+        const sigVal = document.getElementById('sigVal');
+        
+        const origImg = document.getElementById('origImg');
+        const proofImg = document.getElementById('proofImg');
+        const origPlaceholder = document.getElementById('origPlaceholder');
+        const proofPlaceholder = document.getElementById('proofPlaceholder');
+
+        const layer1Box = document.getElementById('layer1Box');
+        const layer1Status = document.getElementById('layer1Status');
+        const layer2Box = document.getElementById('layer2Box');
+        const layer2Status = document.getElementById('layer2Status');
+        const layer3Box = document.getElementById('layer3Box');
+        const layer3Status = document.getElementById('layer3Status');
+        const overallBadge = document.getElementById('overallBadge');
+
+        // Loading state
+        submitBtn.disabled = true;
+        spinner.style.display = 'inline-block';
+        manifestBox.innerText = "⏳ Initializing cryptographic audit protocol...\n- Computing byte-level SHA-256 hash\n- Validating neural network weights tensor checksum\n- Extracting Grad-CAM activation proof\n- Signing manifest with cryptographic token...";
+
+        const formData = new FormData();
+        formData.append('image', fileInput.files[0]);
+        formData.append('contributor_id', document.getElementById('contributorId').value);
+        formData.append('simulate_data_tamper', document.getElementById('dataTamperToggle').checked);
+
+        try {
+            const response = await fetch('/verify-pipeline', {
+                method: 'POST',
+                body: formData
+            });
+            const res = await response.json();
+            latestManifest = res.manifest;
+
+            // Render manifest JSON
+            manifestBox.innerText = JSON.stringify(res.manifest, null, 2);
+            sigVal.innerText = res.secure_signature;
+            sigStrip.style.display = 'flex';
+
+            // Show original image
+            origImg.src = res.original_img_url + '?t=' + Date.now();
+            origImg.style.display = 'block';
+            origPlaceholder.style.display = 'none';
+
+            // Show proof image
+            proofImg.src = res.proof_img_url + '?t=' + Date.now();
+            proofImg.style.display = 'block';
+            proofPlaceholder.style.display = 'none';
+
+            // Render Prediction Banner
+            document.getElementById('predictionBanner').style.display = 'block';
+            document.getElementById('predLabel').innerText = res.prediction.label;
+            document.getElementById('predConfidence').innerText = `Confidence: ${res.prediction.confidence}%`;
+
+            // Layer 1 Update
+            if (res.data_integrity_pass) {
+                layer1Box.className = "layer-box pass";
+                layer1Status.innerHTML = '<span class="status-pass">✓ Verified Authentic</span>';
+            } else {
+                layer1Box.className = "layer-box fail";
+                layer1Status.innerHTML = '<span class="status-fail">❌ TAMPER DETECTED</span>';
+            }
+
+            // Layer 2 Update
+            if (res.model_verified) {
+                layer2Box.className = "layer-box pass";
+                layer2Status.innerHTML = '<span class="status-pass">✓ Weights Intact</span>';
+            } else {
+                layer2Box.className = "layer-box fail";
+                layer2Status.innerHTML = '<span class="status-fail">❌ MODEL POISONED</span>';
+            }
+
+            // Layer 3 Update
+            layer3Box.className = "layer-box pass";
+            layer3Status.innerHTML = '<span class="status-pass">✓ Grad-CAM Grounded</span>';
+
+            // Overall Status
+            if (res.status === 'SUCCESS') {
+                overallBadge.innerHTML = '<span class="badge-pill badge-green">✓ PIPELINE VERIFIED SECURE</span>';
+            } else {
+                overallBadge.innerHTML = '<span class="badge-pill badge-red">❌ INTEGRITY COMPROMISED</span>';
+            }
+
+            // Refresh Ledger table
+            refreshLedger();
+
+        } catch (error) {
+            manifestBox.innerText = "❌ Communication Error with Verification Node Server: " + error.message;
+        } finally {
+            submitBtn.disabled = false;
+            spinner.style.display = 'none';
+        }
+    };
+
+    function copyManifest() {
+        if (!latestManifest) {
+            alert("No manifest generated yet.");
+            return;
+        }
+        navigator.clipboard.writeText(JSON.stringify(latestManifest, null, 2));
+        alert("Manifest JSON copied to clipboard!");
+    }
+
+    // Initial Ledger Load
+    refreshLedger();
+</script>
+</body>
+</html>

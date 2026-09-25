@@ -1,0 +1,9 @@
+flask>=3.0.0
+numpy>=1.24.0
+pillow>=10.0.0
+opencv-python>=4.8.0
+# PyTorch & Torchvision:
+# To install CPU-only torch on Windows (much smaller & faster):
+# pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+torch>=2.0.0
+torchvision>=0.15.0
